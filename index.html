@@ -20,6 +20,7 @@
             margin: 0 auto;
             position: relative;
             overflow: hidden; /* Hide slides that move outside */
+            border-radius: 12px;
         }
         
         .slide {
@@ -41,6 +42,7 @@
         .slide h2 {
             color: #333;
             margin-bottom: 20px;
+            font-size: 28px;
         }
         /* Adding some visual polish */
         .slide {
@@ -51,35 +53,133 @@
             height: calc(100% - 20px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
+        /* Progress dots styling */
+        .progress-bar {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 10; /* Make sure dots appear above slides */
+        }
+        
+        .progress-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ccc;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .progress-dot:hover {
+            background: #888;
+            transform: scale(1.1);
+        }
+        
+        .progress-dot.active {
+            background: #007bff;
+            transform: scale(1.2);
+        }
+        
+        /* Navigation controls */
+        .nav-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+        
+        .nav-button:hover {
+            background: rgba(0,0,0,0.8);
+            transform: translateY(-50%) scale(1.1);
+        }
+        
+        .prev-btn {
+            left: 15px;
+        }
+        
+        .next-btn {
+            right: 15px;
+        }
+        
+        /* Auto-play indicator */
+        .auto-play-status {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            z-index: 10;
+        }
+
     </style>
 </head>
 <body>
     <div class="container">
         <div class="slide active">
-            <h2>Power Automate</h2>
-            <p>Business Workflow Automation</p>
+            <h2>Power Automate ⚡</h2>
+            <p><strong>Business Workflow Automation</strong></p>
+            <p>Click the dots below or use arrow buttons to navigate!</p>
+            <p>Auto-advance pauses when you interact.</p>
         </div>
         
         <div class="slide">
-            <h2>Zapier</h2>
-            <p>App Connections & Triggers</p>
+            <h2>Zapier ⚡</h2>
+            <p><strong>App Connections & Triggers</strong></p>
+            <p>Perfect for connecting different apps together.</p>
+            <p>Try clicking the navigation controls!</p>
         </div>
         
         <div class="slide">
-            <h2>UiPath</h2>
-            <p>Process Automation</p>
+            <h2>UiPath 🔄</h2>
+            <p><strong>Process Automation</strong></p>
+            <p>Leading RPA platform for enterprise automation.</p>
+            <p>Notice how the active dot changes!</p>
         </div>
+        
+        <!-- 🆕 NEW: Navigation elements -->
+        <button class="nav-button prev-btn" onclick="previousSlide()">‹</button>
+        <button class="nav-button next-btn" onclick="nextSlide()">›</button>
+        
+        <div class="progress-bar">
+            <div class="progress-dot active" onclick="goToSlide(0)"></div>
+            <div class="progress-dot" onclick="goToSlide(1)"></div>
+            <div class="progress-dot" onclick="goToSlide(2)"></div>
+        </div>
+        
+        <div class="auto-play-status" id="autoPlayStatus">Auto-play: ON</div>
     </div>
 
     <script>
         const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.progress-dot');
+        const autoPlayStatus = document.getElementById('autoPlayStatus');
+        
         let current = 0;
+        let autoPlay = true;
+        let autoPlayInterval;
         
         function showSlide(index) {
-            // Remove active class from all slides
+            // Remove active class from all slides and dots
             slides.forEach(slide => slide.classList.remove('active'));
-            // Add active class to current slide
+            dots.forEach(dot => dot.classList.remove('active'));            
+            // Add active class to current slide and dot
             slides[index].classList.add('active');
+            dots[index].classList.add('active');
         }
         
         function nextSlide() {
@@ -87,7 +187,37 @@
             showSlide(current);
         }
         
-        // Change slide every 3 seconds
-        setInterval(nextSlide, 3000);
+         // Auto-play management
+        function startAutoPlay() {
+            if (autoPlay) {
+                autoPlayInterval = setInterval(nextSlide, 3000);
+            }
+        }
+        
+        function pauseAutoPlay() {
+            autoPlay = false;
+            clearInterval(autoPlayInterval);
+            autoPlayStatus.textContent = 'Auto-play: PAUSED';
+            
+            // Resume after 5 seconds of no interaction
+            setTimeout(() => {
+                autoPlay = true;
+                autoPlayStatus.textContent = 'Auto-play: ON';
+                startAutoPlay();
+            }, 5000);
+        }
+        
+        // Start auto-play
+        startAutoPlay();
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                previousSlide();
+            } else if (e.key === 'ArrowRight') {
+                nextSlide();
+            }
+        });
+
     </script>
 </html>
