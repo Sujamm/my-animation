@@ -5,147 +5,225 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Automation Tools Animation</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        * {
             margin: 0;
-            padding: 20px;
-            background:  linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
         }
         
-        .container {
-            width: 800px;
-            height: 500px;
-            background: white;
-            border: 2px solid #ddd;
-            margin: 0 auto;
+        .showcase-container {
+            width: 900px;
+            height: 600px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #533483 75%, #e94560 100%);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3), 0 0 40px rgba(233, 69, 96, 0.2);
             position: relative;
             overflow: hidden; /* Hide slides that move outside */
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.1);
         }
-        
-        .slide {
+        /*Atmospheric glowing effects*/
+
+        .showcase-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .tool-slide {
             position: absolute;
             width: 100%;
             height: 100%;
-            padding: 30px;
-            box-sizing: border-box;  
+            display: flex;/* Split into two sections */
             opacity: 0;  /* Start invisible */
-            transform: translateX(50px); /* Start off to the right */
-            transition: all 0.6s ease; /* Smooth animation */
-            display: flex; /* Split into two sections */
+            transform: translateX(100px); /* Start off to the right */
+            transition: all 0.8s ease-in-out; /* Smooth animation */
+            padding: 40px;
         }
         
-        .slide.active {
+        .tool-slide.active {
             opacity: 1; /* Fades in */
             transform: translateX(0); /* Slides into position */
         }
 
-        /* Split layout */
-        .slide-content {
+        .tool-info{
             flex: 1;
-            padding-right: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-right: 40px;
         }
 
-        .slide-visual {
+        .tool-icon {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .tool-name {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #fff;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+         .tool-category {
+            font-size: 18px;
+            color: #e2e8f0;
+            margin-bottom: 20px;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        .tool-strength {
+            font-size: 24px;
+            color: #f7fafc;
+            font-weight: 600;
+            margin-bottom: 30px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+        .visual-area {
             flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-        
-        .slide h2 {
-            color: #333;
-            margin-bottom: 15px;
-            font-size: 32px;
+            position: relative;
         }
 
-        .slide .category {
-            font-size: 16px;
-            color: #555;
-            margin-bottom: 20px;
-            font-weight: 500;
+        .diagram {
+            width: 100%;
+            height: 300px;
+            position: relative;
         }
 
-        .slide .strength {
-            color: #007bff;
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 20px;
+        .progress-bar {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
         }
 
-        /* Workflow diagram animations */
+        .progress-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .progress-dot.active {
+            background: #4299e1;
+            transform: scale(1.2);
+            box-shadow: 0 0 10px rgba(66, 153, 225, 0.5);
+        }
+
+        /* Tool specific color gradients */
+
+        .power-automate .tool-icon { background: linear-gradient(135deg, #0078d4, #106ebe); }
+        .zapier .tool-icon { background: linear-gradient(135deg, #ff4a00, #ff6b35); }
+        .uipath .tool-icon { background: linear-gradient(135deg, #fa6400, #ff8c42); }
+
+        /* Animation diagrams*/
         .workflow-diagram {
             display: flex;
             align-items: center;
-            gap: 20px;
+            justify-content: space-between;
+            height: 100%;
         }
+
         .workflow-step {
             width: 60px;
             height: 60px;
             border-radius: 50%;
-            background: #e9ecef;
+            background: rgba(255,255,255,0.9);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 24px;
             animation: pulse 2s infinite;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
         }
         
         .workflow-arrow {
-            width: 30px;
+            width: 40px;
             height: 4px;
-            background: #007bff;
+            background: #4299e1;
             position: relative;
             animation: flow 2s infinite;
         }
-        
+
         .workflow-arrow::after {
             content: '';
             position: absolute;
-            right: -6px;
-            top: -3px;
+            right: -8px;
+            top: -4px;
             width: 0;
             height: 0;
-            border-left: 10px solid #007bff;
-            border-top: 5px solid transparent;
-            border-bottom: 5px solid transparent;
-        }
-
-        /* Connection diagram for Zapier */
+            border-left: 12px solid #4299e1;
+            border-top: 6px solid transparent;
+            border-bottom: 6px solid transparent;
+        }        
         .connection-diagram {
             display: grid;
             grid-template-columns: 1fr 80px 1fr;
             align-items: center;
+            height: 100%;
             gap: 20px;
-            width: 100%;
         }
-        
+
         .app-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
+            gap: 15px;
         }
-        
+
         .app-box {
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             border-radius: 8px;
-            background: #f8f9fa;
-            border: 2px solid #dee2e6;
+            background: rgba(255,255,255,0.9);
+            border: 2px solid rgba(255,255,255,0.3);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
+            font-size: 20px;
             animation: bounce 2s infinite;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
+
         .central-hub {
             width: 80px;
             height: 80px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #ff4a00, #ff6b35);
+            background: #ff4a00;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -153,55 +231,99 @@
             font-size: 24px;
             font-weight: bold;
             animation: rotate 3s linear infinite;
-            box-shadow: 0 6px 20px rgba(255, 74, 0, 0.3);
+            box-shadow: 0 6px 20px rgba(255, 74, 0, 0.4);
         }
-        
+
         /* RPA diagram */
+
         .rpa-diagram {
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
+            height: 100%;
             gap: 30px;
         }
-        
+
         .robot-icon {
-            width: 80px;
-            height: 80px;
+            width: 100px;
+            height: 100px;
             border-radius: 12px;
             background: linear-gradient(135deg, #4f46e5, #7c3aed);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 40px;
+            font-size: 50px;
             color: white;
             animation: robotMove 2s ease-in-out infinite;
-            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.3);
+            box-shadow: 0 8px 25px rgba(79, 70, 229, 0.4);
         }
-        
+
         .task-flow {
             display: flex;
-            gap: 10px;
+            gap: 15px;
         }
-        
+
         .task {
-            width: 40px;
-            height: 25px;
-            background: #e9ecef;
+            width: 50px;
+            height: 30px;
+            background: rgba(255,255,255,0.8);
             border-radius: 4px;
             animation: taskComplete 3s infinite;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .database-diagram {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            height: 100%;
+            justify-content: center;
+        }
+
+        .database-icon {
+            width: 80px;
+            height: 60px;
+            background: linear-gradient(135deg, #1e40af, #3b82f6);
+            border-radius: 8px;
+            position: relative;
+            animation: dataFlow 2s infinite;
+            box-shadow: 0 6px 20px rgba(30, 64, 175, 0.3);
+        }
+
+        .database-icon::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90px;
+            height: 16px;
+            background: linear-gradient(135deg, #3b82f6, #60a5fa);
+            border-radius: 50%;
+        }
+
+        .data-connections {
+            display: flex;
+            gap: 20px;
+        }
+
+        .data-point {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #10b981, #34d399);
+            animation: dataSync 1.5s infinite;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
         }
         
         /* CSS Keyframe Animations */
         @keyframes pulse {
-            0%, 100% { 
-                transform: scale(1); 
-                background: #e9ecef; 
-            }
-            50% { 
-                transform: scale(1.1); 
-                background: #007bff; 
-                color: white; 
-            }
+            0%, 100% { transform: scale(1); background: rgba(255,255,255,0.9); }
+            50% { transform: scale(1.1); background: #4299e1; color: white; 
+                box-shadow: 0 6px 20px rgba(66, 153, 225, 0.4); }
         }
         
         @keyframes flow {
@@ -211,7 +333,7 @@
         
         @keyframes bounce {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
+            50% { transform: translateY(-10px); }
         }
         
         @keyframes rotate {
@@ -221,98 +343,40 @@
         
         @keyframes robotMove {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+            50% { transform: translateY(-15px); }
         }
         
         @keyframes taskComplete {
-            0% { background: #e9ecef; }
-            33% { background: #ffc107; }
-            66% { background: #28a745; }
-            100% { background: #e9ecef; }
+            0% { background: rgba(255,255,255,0.8); }
+            33% { background: #fbbf24; box-shadow: 0 4px 12px rgba(251, 191, 36, 0.4); }
+            66% { background: #10b981; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4); }
+            100% { background: rgba(255,255,255,0.8); }
         }
-    
-        /* Progress dots styling */
-        .progress-bar {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 10px;
-            z-index: 10; /* Make sure dots appear above slides */
+
+        @keyframes dataFlow {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); box-shadow: 0 8px 25px rgba(30, 64, 175, 0.5); }
         }
-        
-        .progress-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #ccc;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .progress-dot:hover {
-            background: #888;
-            transform: scale(1.1);
-        }
-        
-        .progress-dot.active {
-            background: #007bff;
-            transform: scale(1.2);
-        }
-        
-        /* Navigation controls */
-        .nav-button {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(0,0,0,0.5);
-            color: white;
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 18px;
-            transition: all 0.3s ease;
-            z-index: 10;
-        }
-        
-        .nav-button:hover {
-            background: rgba(0,0,0,0.8);
-            transform: translateY(-50%) scale(1.1);
-        }
-        
-        .prev-btn { left: 15px;}
-        
-        .next-btn { right: 15px;}
-        
-        /* Auto-play indicator */
-        .auto-play-status {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: rgba(0,0,0,0.7);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 12px;
-            z-index: 10;
+
+        @keyframes dataSync {
+            0%, 100% { opacity: 0.5;}
+            50% { opacity: 1; transform: scale(1.1);}
         }
 
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="slide active">
-            <div class="slide-content">
-                <h2>Power Automate ⚡</h2>
-                <div class="category">Microsoft</div>
-                <div class="strength">Business Workflow Automation</div>
-                <p>Automate repetitive tasks and business processes with visual workflows.</p>
+    <div class="showcase-container">
+        <!-- Microsoft Power Automate -->
+        <div class="tool-slide power-automate active">
+            <div class="tool-info">
+                <div class="tool-icon">⚡</div>
+                <div class="tool-name">Power Automate</div>
+                <div class="tool-category">Microsoft</div>
+                <div class="tool-strength">Business Workflow Automation</div>
             </div>
-            <div class="slide-visual">
-                <div class="workflow-diagram">
+            <div class="visual-area">
+                <div class="diagram workflow-diagram">
                     <div class="workflow-step">📧</div>
                     <div class="workflow-arrow"></div>
                     <div class="workflow-step">📋</div>
@@ -321,16 +385,17 @@
                 </div>
             </div>
         </div>
-        
-        <div class="slide">
-            <div class="slide-content">
-                <h2>Zapier ⚡</h2>
-                <div class="category">Integration Platform</div>
-                <div class="strength">App Connections & Triggers</div>
-                <p>Connect 5,000+ apps and automate workflows without coding.</p>
+
+        <!-- Zapier -->
+        <div class="tool-slide zapier">
+            <div class="tool-info">
+                <div class="tool-icon">⚡</div>
+                <div class="tool-name">Zapier</div>
+                <div class="tool-category">Integration Platform</div>
+                <div class="tool-strength">App Connections & Triggers</div>
             </div>
-            <div class="slide-visual">
-                <div class="connection-diagram">
+            <div class="visual-area">
+                <div class="diagram connection-diagram">
                     <div class="app-grid">
                         <div class="app-box">📧</div>
                         <div class="app-box">📊</div>
@@ -347,17 +412,18 @@
                 </div>
             </div>
         </div>
-        
-        <div class="slide">
-            <div class="slide-content">
-                <h2>UiPath 🔄</h2>
-                <div class="category">RPA Leader</div>
-                <div class="strength">Process Automation</div>
-                <p>Enterprise-grade robotic process automation with AI capabilities.</p>
+
+        <!-- UiPath -->
+        <div class="tool-slide uipath">
+            <div class="tool-info">
+                <div class="tool-icon">🔄</div>
+                <div class="tool-name">UiPath</div>
+                <div class="tool-category">RPA Leader</div>
+                <div class="tool-strength">Process Automation</div>
             </div>
-            <div class="slide-visual">
-                <div class="rpa-diagram">
-                    <div class="robot-icon">🤖</div>
+            <div class="visual-area">
+                <div class="diagram rpa-diagram">
+                    <div class="robot-icon">🔄</div>
                     <div class="task-flow">
                         <div class="task"></div>
                         <div class="task"></div>
@@ -368,84 +434,43 @@
                 </div>
             </div>
         </div>
-        
-        <!-- Navigation elements -->
-        <button class="nav-button prev-btn" onclick="previousSlide()">‹</button>
-        <button class="nav-button next-btn" onclick="nextSlide()">›</button>
-        
+
+        <!-- Progress Bar -->
         <div class="progress-bar">
-            <div class="progress-dot active" onclick="goToSlide(0)"></div>
-            <div class="progress-dot" onclick="goToSlide(1)"></div>
-            <div class="progress-dot" onclick="goToSlide(2)"></div>
+            <div class="progress-dot active"></div>
+            <div class="progress-dot"></div>
+            <div class="progress-dot"></div>
         </div>
-        
-        <div class="auto-play-status" id="autoPlayStatus">Auto-play: ON</div>
     </div>
 
     <script>
-        const slides = document.querySelectorAll('.slide');
-        const dots = document.querySelectorAll('.progress-dot');
-        const autoPlayStatus = document.getElementById('autoPlayStatus');
-        
-        let current = 0;
-        let autoPlay = true;
-        let autoPlayInterval;
+        const slides = document.querySelectorAll('.tool-slide');
+        const progressDots = document.querySelectorAll('.progress-dot');
+        let currentSlide = 0;
         
         function showSlide(index) {
-            // Remove active class from all slides and dots
+            // Hide all the slides
             slides.forEach(slide => slide.classList.remove('active'));
-            dots.forEach(dot => dot.classList.remove('active'));            
-            // Add active class to current slide and dot
+            progressDots.forEach(dot => dot.classList.remove('active'));            
+            // Show the current slide
             slides[index].classList.add('active');
-            dots[index].classList.add('active');
+            progressDots[index].classList.add('active');
         }
         
         function nextSlide() {
-            current = (current + 1) % slides.length;
-            showSlide(current);
+            current = (currentSlide + 1) % slides.length;
+            showSlide(currentSlide);
         }
         
-        function previousSlide() {
-            current = (current - 1 + slides.length) % slides.length;
-            showSlide(current);
-            pauseAutoPlay();
-        }
-        
-        function goToSlide(index) {
-            current = index;
-            showSlide(current);
-            pauseAutoPlay();
-        }
-         // Auto-play management
-        function startAutoPlay() {
-            if (autoPlay) {
-                autoPlayInterval = setInterval(nextSlide, 4000);
-            }
-        }
-        
-        function pauseAutoPlay() {
-            autoPlay = false;
-            clearInterval(autoPlayInterval);
-            autoPlayStatus.textContent = 'Auto-play: PAUSED';
-            
-            // Resume after 5 seconds of no interaction
-            setTimeout(() => {
-                autoPlay = true;
-                autoPlayStatus.textContent = 'Auto-play: ON';
-                startAutoPlay();
-            }, 5000);
-        }
-        
-        // Start auto-play
-        startAutoPlay();
-        
-        // Keyboard navigation
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowLeft') {
-                previousSlide();
-            } else if (e.key === 'ArrowRight') {
-                nextSlide();
-            }
+        // Auto-advance slides every 4 seconds
+        setInterval(nextSlide, 4000);
+
+        // Click on progress dots to navigate
+        progressDots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                currentSlide = index;
+                showSlide(currentSlide);
+            });
         });
 
     </script>
