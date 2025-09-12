@@ -9,41 +9,228 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
-            background: #f0f0f0;
+            background:  linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
         }
         
         .container {
-            width: 600px;
-            height: 400px;
+            width: 800px;
+            height: 500px;
             background: white;
             border: 2px solid #ddd;
             margin: 0 auto;
             position: relative;
             overflow: hidden; /* Hide slides that move outside */
             border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
         
         .slide {
             position: absolute;
             width: 100%;
             height: 100%;
-            padding: 40px;
+            padding: 30px;
             box-sizing: border-box;  
             opacity: 0;  /* Start invisible */
             transform: translateX(50px); /* Start off to the right */
             transition: all 0.6s ease; /* Smooth animation */
+            display: flex; /* Split into two sections */
         }
         
         .slide.active {
             opacity: 1; /* Fades in */
             transform: translateX(0); /* Slides into position */
         }
+
+        /* Split layout */
+        .slide-content {
+            flex: 1;
+            padding-right: 30px;
+        }
+
+        .slide-visual {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
         
         .slide h2 {
             color: #333;
-            margin-bottom: 20px;
-            font-size: 28px;
+            margin-bottom: 15px;
+            font-size: 32px;
         }
+
+        .slide .category {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .slide .strength {
+            color: #007bff;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        /* Workflow diagram animations */
+        .workflow-diagram {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .workflow-step {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            animation: pulse 2s infinite;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .workflow-arrow {
+            width: 30px;
+            height: 4px;
+            background: #007bff;
+            position: relative;
+            animation: flow 2s infinite;
+        }
+        
+        .workflow-arrow::after {
+            content: '';
+            position: absolute;
+            right: -6px;
+            top: -3px;
+            width: 0;
+            height: 0;
+            border-left: 10px solid #007bff;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+        }
+
+        /* Connection diagram for Zapier */
+        .connection-diagram {
+            display: grid;
+            grid-template-columns: 1fr 80px 1fr;
+            align-items: center;
+            gap: 20px;
+            width: 100%;
+        }
+        
+        .app-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .app-box {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            animation: bounce 2s infinite;
+        }
+        .central-hub {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff4a00, #ff6b35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            animation: rotate 3s linear infinite;
+            box-shadow: 0 6px 20px rgba(255, 74, 0, 0.3);
+        }
+        
+        /* RPA diagram */
+        .rpa-diagram {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+        
+        .robot-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: white;
+            animation: robotMove 2s ease-in-out infinite;
+            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.3);
+        }
+        
+        .task-flow {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .task {
+            width: 40px;
+            height: 25px;
+            background: #e9ecef;
+            border-radius: 4px;
+            animation: taskComplete 3s infinite;
+        }
+        
+        /* CSS Keyframe Animations */
+        @keyframes pulse {
+            0%, 100% { 
+                transform: scale(1); 
+                background: #e9ecef; 
+            }
+            50% { 
+                transform: scale(1.1); 
+                background: #007bff; 
+                color: white; 
+            }
+        }
+        
+        @keyframes flow {
+            0% { transform: scaleX(0); }
+            100% { transform: scaleX(1); }
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        @keyframes robotMove {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes taskComplete {
+            0% { background: #e9ecef; }
+            33% { background: #ffc107; }
+            66% { background: #28a745; }
+            100% { background: #e9ecef; }
+        }
+        
         /* Adding some visual polish */
         .slide {
             background: linear-gradient(135deg, #f8f9fa, #e9ecef);
@@ -105,13 +292,9 @@
             transform: translateY(-50%) scale(1.1);
         }
         
-        .prev-btn {
-            left: 15px;
-        }
+        .prev-btn { left: 15px;}
         
-        .next-btn {
-            right: 15px;
-        }
+        .next-btn { right: 15px;}
         
         /* Auto-play indicator */
         .auto-play-status {
@@ -131,27 +314,71 @@
 <body>
     <div class="container">
         <div class="slide active">
-            <h2>Power Automate ⚡</h2>
-            <p><strong>Business Workflow Automation</strong></p>
-            <p>Click the dots below or use arrow buttons to navigate!</p>
-            <p>Auto-advance pauses when you interact.</p>
+            <div class="slide-content">
+                <h2>Power Automate ⚡</h2>
+                <div class="category">Microsoft</div>
+                <div class="strength">Business Workflow Automation</div>
+                <p>Automate repetitive tasks and business processes with visual workflows.</p>
+            </div>
+            <div class="slide-visual">
+                <div class="workflow-diagram">
+                    <div class="workflow-step">📧</div>
+                    <div class="workflow-arrow"></div>
+                    <div class="workflow-step">📋</div>
+                    <div class="workflow-arrow"></div>
+                    <div class="workflow-step">✅</div>
+                </div>
+            </div>
         </div>
         
         <div class="slide">
-            <h2>Zapier ⚡</h2>
-            <p><strong>App Connections & Triggers</strong></p>
-            <p>Perfect for connecting different apps together.</p>
-            <p>Try clicking the navigation controls!</p>
+            <div class="slide-content">
+                <h2>Zapier ⚡</h2>
+                <div class="category">Integration Platform</div>
+                <div class="strength">App Connections & Triggers</div>
+                <p>Connect 5,000+ apps and automate workflows without coding.</p>
+            </div>
+            <div class="slide-visual">
+                <div class="connection-diagram">
+                    <div class="app-grid">
+                        <div class="app-box">📧</div>
+                        <div class="app-box">📊</div>
+                        <div class="app-box">💬</div>
+                        <div class="app-box">📅</div>
+                    </div>
+                    <div class="central-hub">Z</div>
+                    <div class="app-grid">
+                        <div class="app-box">📋</div>
+                        <div class="app-box">💾</div>
+                        <div class="app-box">📱</div>
+                        <div class="app-box">🔔</div>
+                    </div>
+                </div>
+            </div>
         </div>
         
         <div class="slide">
-            <h2>UiPath 🔄</h2>
-            <p><strong>Process Automation</strong></p>
-            <p>Leading RPA platform for enterprise automation.</p>
-            <p>Notice how the active dot changes!</p>
+            <div class="slide-content">
+                <h2>UiPath 🔄</h2>
+                <div class="category">RPA Leader</div>
+                <div class="strength">Process Automation</div>
+                <p>Enterprise-grade robotic process automation with AI capabilities.</p>
+            </div>
+            <div class="slide-visual">
+                <div class="rpa-diagram">
+                    <div class="robot-icon">🤖</div>
+                    <div class="task-flow">
+                        <div class="task"></div>
+                        <div class="task"></div>
+                        <div class="task"></div>
+                        <div class="task"></div>
+                        <div class="task"></div>
+                    </div>
+                </div>
+            </div>
         </div>
         
-        <!-- 🆕 NEW: Navigation elements -->
+        <!-- Navigation elements -->
         <button class="nav-button prev-btn" onclick="previousSlide()">‹</button>
         <button class="nav-button next-btn" onclick="nextSlide()">›</button>
         
@@ -187,10 +414,21 @@
             showSlide(current);
         }
         
+        function previousSlide() {
+            current = (current - 1 + slides.length) % slides.length;
+            showSlide(current);
+            pauseAutoPlay();
+        }
+        
+        function goToSlide(index) {
+            current = index;
+            showSlide(current);
+            pauseAutoPlay();
+        }
          // Auto-play management
         function startAutoPlay() {
             if (autoPlay) {
-                autoPlayInterval = setInterval(nextSlide, 3000);
+                autoPlayInterval = setInterval(nextSlide, 4000);
             }
         }
         
@@ -220,4 +458,5 @@
         });
 
     </script>
+</body>
 </html>
